@@ -10,7 +10,9 @@
 #include "utils/history_buffer.hpp"
 #include "utils/io.hpp"
 #include "utils/once_writer.hpp"
+#include "utils/project_root.hpp"
 #include "utils/regexp.hpp"
+#include "utils/search.hpp"
 #include "utils/slice.hpp"
 #include "utils/stack.hpp"
 #include "utils/string_pool.hpp"
@@ -93,6 +95,19 @@ namespace {
   (void)Move(std::vector<int>{1, 2}, 0, 1);
   (void)Pop(std::vector<int>{1, 2});
   (void)Shift(std::vector<int>{1, 2});
+
+  (void)FilterStrings("la", std::vector<std::string>{"lazygit", "git"}, true);
+  (void)FilterStrings("la", std::vector<std::string>{"lazygit", "git"}, false);
+  (void)Find("la", std::vector<std::string>{"lazygit"}, true);
+  (void)FindSubstrings("la", std::vector<std::string>{"lazygit"});
+  (void)CaseAwareContains("LazyGit", "Lazy");
+  (void)ContainsUppercase("LazyGit");
+  (void)CaseInsensitiveContains("LazyGit", "lazygit");
+  const fuzzy::StringSource search_source(std::vector<std::string>{"lazygit"});
+  (void)FindFrom("la", search_source, true);
+  (void)FindSubstringsFrom("la", search_source);
+
+  (void)FindLazygitRootDirectory();
 }
 
 }  // namespace
