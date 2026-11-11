@@ -56,9 +56,11 @@ vendored dependencies) is the target surface: **410 files / 87,279 lines**.
 | `pkg/utils/io.go` | 30 | `src/utils/io.hpp`, `src/utils/io.cpp` | 67 |
 | `pkg/utils/template.go` | 33 | `src/utils/template.hpp`, `src/utils/template.cpp` | 136 |
 | `pkg/utils/regexp.go` | 17 | `src/utils/regexp.hpp`, `src/utils/regexp.cpp` | 97 |
-| **9 files translated** | **295** | **12 files (9 headers/impls + 1 CI check)** | **646** |
+| `pkg/utils/date.go` | 67 | `src/utils/date.hpp`, `src/utils/date.cpp` | 207 |
+| `pkg/utils/slice.go` | 179 | `src/utils/slice.hpp` | 233 |
+| **11 files translated** | **541** | **14 files (11 headers/impls + 1 CI check)** | **1086** |
 
-Translated so far: 9 of 410 upstream files. C++ carries more lines than the Go
+Translated so far: 11 of 410 upstream files. C++ carries more lines than the Go
 original because translation splits declarations into headers, and because Go
 constructs that have no one-line C++ counterpart (errors without values,
 `sync.Map`, named capture groups) need an explicit type or shim.
