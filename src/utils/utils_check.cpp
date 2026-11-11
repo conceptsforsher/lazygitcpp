@@ -5,20 +5,24 @@
 // all, and templates would never even be instantiated. It includes every
 // translated header and exercises each one, so CI really checks them.
 
+#include "utils/date.hpp"
 #include "utils/errors.hpp"
 #include "utils/history_buffer.hpp"
 #include "utils/io.hpp"
 #include "utils/once_writer.hpp"
 #include "utils/regexp.hpp"
+#include "utils/slice.hpp"
 #include "utils/stack.hpp"
 #include "utils/string_pool.hpp"
 #include "utils/template.hpp"
 #include "utils/thread_safe_map.hpp"
 
+#include <ctime>
 #include <map>
 #include <optional>
 #include <sstream>
 #include <string>
+#include <vector>
 
 namespace lazygit {
 namespace utils {
@@ -65,6 +69,30 @@ namespace {
   (void)ForEachLineInFile("no-such-file", [](const std::string&, int) {});
 
   (void)FindNamedMatches(CompileRegexp("(?P<name>[a-z]+)"), "lazygit");
+
+  (void)UnixToTimeAgo(1700000000);
+  (void)UnixToDateSmart(std::time(nullptr), 1700000000, "02 Jan 06", "3:04PM");
+  (void)GoLayoutToStrftime("2006-01-02 15:04:05");
+  (void)FormatGoLayout(1700000000, "02 Jan 06");
+
+  (void)NextIndex({1, 3, 5}, 2);
+  (void)PrevIndex({1, 3, 5}, 4);
+  (void)NextIntInCycle({1, 3, 5}, 5);
+  (void)PrevIntInCycle({1, 3, 5}, 1);
+  (void)StringArraysOverlap({"a"}, {"b", "a"});
+  (void)Limit({"a", "b"}, 1);
+  (void)LimitStr("abcdef", 3);
+  (void)MuiltiGroupBy<int, std::string>(
+      std::vector<int>{1, 2},
+      [](int value) { return std::vector<std::string>{std::to_string(value)}; });
+  (void)MoveElement(std::vector<int>{1, 2, 3}, 0, 2);
+  (void)ValuesAtIndices(std::vector<int>{1, 2, 3}, {0, 5});
+  (void)Partition(std::vector<int>{1, 2}, [](int value) { return value % 2 == 0; });
+  (void)Prepend(std::vector<int>{2}, 1);
+  (void)Remove(std::vector<int>{1, 2}, 0);
+  (void)Move(std::vector<int>{1, 2}, 0, 1);
+  (void)Pop(std::vector<int>{1, 2});
+  (void)Shift(std::vector<int>{1, 2});
 }
 
 }  // namespace
