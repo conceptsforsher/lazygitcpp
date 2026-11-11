@@ -103,9 +103,8 @@ inline std::string LimitStr(const std::string& value, int limit) {
 }
 
 // MuiltiGroupBy: upstream lines 82-97 (the typo is upstream's).
-template <typename T, typename K>
-std::map<K, std::vector<T>> MuiltiGroupBy(const std::vector<T>& slice,
-                                          const std::function<std::vector<K>(const T&)>& f) {
+template <typename T, typename K, typename F>
+std::map<K, std::vector<T>> MuiltiGroupBy(const std::vector<T>& slice, F f) {
   std::map<K, std::vector<T>> result;
   for (const T& item : slice) {
     for (const K& key : f(item)) {
@@ -160,9 +159,10 @@ std::vector<T> ValuesAtIndices(const std::vector<T>& slice, const std::vector<in
 
 // Partition: upstream lines 131-144. Upstream comment: "returns two slices: the
 // first is for elements that pass the test, the second for those that don't."
-template <typename T>
-std::pair<std::vector<T>, std::vector<T>> Partition(const std::vector<T>& slice,
-                                                    const std::function<bool(const T&)>& test) {
+// Upstream takes func(T) bool; the predicate type is deduced here so that a
+// lambda can be passed straight through (std::function would block deduction).
+template <typename T, typename Pred>
+std::pair<std::vector<T>, std::vector<T>> Partition(const std::vector<T>& slice, Pred test) {
   std::vector<T> left;
   std::vector<T> right;
   left.reserve(slice.size());
