@@ -17,10 +17,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install clang
-        if: matrix.cxx == 'clang++'
-        run: sudo apt-get update && sudo apt-get install -y clang
-
       - name: Build with ${{ matrix.cxx }}
         run: make CXX=${{ matrix.cxx }}
 
