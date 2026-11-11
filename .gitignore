@@ -1,0 +1,4 @@
+build/
+lazygitcpp
+*.o
+*.d

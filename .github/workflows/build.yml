@@ -1,0 +1,39 @@
+name: build
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  makefile:
+    name: make (${{ matrix.cxx }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        cxx: [g++, clang++]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install clang
+        if: matrix.cxx == 'clang++'
+        run: sudo apt-get update && sudo apt-get install -y clang
+
+      - name: Build with ${{ matrix.cxx }}
+        run: make CXX=${{ matrix.cxx }}
+
+      - name: Verify the binary was produced
+        run: ls -l lazygitcpp
+
+      - name: Rebuild from scratch
+        run: make clean && make CXX=${{ matrix.cxx }}
+
+      - name: No build artifacts tracked in git
+        run: |
+          tracked=$(git ls-files | grep -E '^(build/|lazygitcpp$)' || true)
+          if [ -n "$tracked" ]; then
+            echo "build artifacts are committed: $tracked"
+            exit 1
+          fi
