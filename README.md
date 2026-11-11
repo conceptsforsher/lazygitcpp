@@ -58,9 +58,11 @@ vendored dependencies) is the target surface: **410 files / 87,279 lines**.
 | `pkg/utils/regexp.go` | 17 | `src/utils/regexp.hpp`, `src/utils/regexp.cpp` | 97 |
 | `pkg/utils/date.go` | 67 | `src/utils/date.hpp`, `src/utils/date.cpp` | 207 |
 | `pkg/utils/slice.go` | 179 | `src/utils/slice.hpp` | 233 |
-| **11 files translated** | **541** | **14 files (11 headers/impls + 1 CI check)** | **1086** |
+| `pkg/utils/search.go` | 95 | `src/utils/search.hpp`, `src/utils/search.cpp` + `src/third_party/fuzzy/*` | 339 |
+| `pkg/utils/project_root.go` | 69 | `src/utils/project_root.hpp`, `src/utils/project_root.cpp` | 178 |
+| **13 files translated** | **705** | **18 files (+ 2-file fuzzy shim + 1 CI check)** | **1603** |
 
-Translated so far: 11 of 410 upstream files. C++ carries more lines than the Go
+Translated so far: 13 of 410 upstream files. C++ carries more lines than the Go
 original because translation splits declarations into headers, and because Go
 constructs that have no one-line C++ counterpart (errors without values,
 `sync.Map`, named capture groups) need an explicit type or shim.
@@ -73,6 +75,10 @@ Not translated as-is, and marked in the file itself:
   the nil-in/nil-out behaviour upstream relies on is preserved.
 - Named regexp groups are kept alongside the compiled expression, because
   `std::regex` has no notion of `SubexpNames()`.
+- `fuzzy.Find` scoring is an approximation of `github.com/sahilm/fuzzy` (see
+  `src/third_party/fuzzy/fuzzy.hpp`); ordering is right, the score value is not.
+- `MustFindLazygitRootDirectory` writes to stderr and exits 1 where upstream
+  calls `log.Fatal`, because a C++ exception would change every caller.
 
 ## Build
 
