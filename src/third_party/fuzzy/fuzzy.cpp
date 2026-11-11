@@ -76,7 +76,7 @@ Matches FindFrom(const std::string& pattern, const Source& source) {
 }
 
 Matches Find(const std::string& pattern, const std::vector<std::string>& data) {
-  const StringSource source(std::vector<std::string>(data));
+  const StringSource source(data);
   return FindFrom(pattern, source);
 }
 
